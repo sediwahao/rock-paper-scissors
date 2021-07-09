@@ -1,54 +1,121 @@
-const computerChoiceDisplay = document.getElementById("computer-choice")
-const playersChoiceDisplay = document.getElementById("players-choice")
-const resultsDisplay  = document.getElementById("results")
-const possibleChoices = document.getElementById("btns")
-let playersChoice
-let computerChoice
+const game = () => {
+	let playerScore = 0;
+	let computerScore = 0;
+	let moves = 0;
 
-possibleChoices.forEach(possibleChoice => possibleChoice.addEventListener('click', (e) =>  {
-    playerChoice = e.target.id
-    playersChoiceDisplay.innerHTML = playerChoice
-    computerChoiceDisplay()
-    getResult()
- } ))
 
- function computerPlay() {
-     const  randomNumber = Math.floor(Math.random() * 3)
+	const playGame = () => {
+		const rockBtn = document.querySelector('.rock');
+		const paperBtn = document.querySelector('.paper');
+		const scissorBtn = document.querySelector('.scissor');
+		const playerOptions = [rockBtn, paperBtn, scissorBtn];
+		const computerOptions = ['rock', 'paper', 'scissors']
+		
+		playerOptions.forEach(option => {
+			option.addEventListener('click',function(){
 
-     if (randomNumber === 1) {
-         computerChoice = 'rock'
-     }
-     if (randomNumber === 2) {
-         computerChoice = 'scissors'
-     }
-     if (randomNumber === 3) {
-         computerChoice = 'paper'
-     }
-      
-    computerChoiceDisplay.innerHTML = computerChoice
- }
+				const movesLeft = document.querySelector('.movesleft');
+				moves++;
+				movesLeft.innerText = `Moves Left: ${5-moves}`;
+				
 
- function getResult() {
-     if (computerChoice === playersChoice) {
-         result = 'its a draw!'
-     }
-     if (computerChoice === 'rock' && playersChoice === 'paper') {
-         result = 'you win!'
-     }
-     if (computeChoice === 'rock' && playersChoice === 'scissors') {
-         result = 'you lost!'
-     }
-     if (computerChoice === 'paper' && playersChoice === 'rock') {
-         result = 'you lost!'
-     }
-     if (computerChoice === 'paper' && playersChoice === 'scissors') {
-         result = 'you win!'
-     }
-     if (computerChoice === 'scissors' && playersChoice === 'rock') {
-         result = 'you win!'
-     }
-     if (computerChoice === 'scissors' && playersChoice === 'paper') {
-         result = 'you lost!'
-     }
-     resultsDisplay.innerHTML = result
- }
+				const choiceNumber = Math.floor(Math.random()*3);
+				const computerChoice = computerOptions[choiceNumber];
+
+				winner(this.innerText,computerChoice)
+		
+				if(moves == 5){
+					gameOver(playerOptions,movesLeft);
+				}
+			})
+		})
+		
+	}
+
+	const winner = (player,computer) => {
+		const result = document.querySelector('.result');
+		const playerScoreBoard = document.querySelector('.p-count');
+		const computerScoreBoard = document.querySelector('.c-count');
+		player = player.toLowerCase();
+		computer = computer.toLowerCase();
+		if(player === computer){
+			result.textContent = 'Draw!'
+		}
+		else if(player == 'rock'){
+			if(computer == 'paper'){
+				result.textContent = 'Computer Won!';
+				computerScore++;
+				computerScoreBoard.textContent = computerScore;
+
+			}else{
+				result.textContent = 'You Won!'
+				playerScore++;
+				playerScoreBoard.textContent = playerScore;
+			}
+		}
+		else if(player == 'scissors'){
+			if(computer == 'rock'){
+				result.textContent = 'Computer Won!';
+				computerScore++;
+				computerScoreBoard.textContent = computerScore;
+			}else{
+				result.textContent = 'You Won!';
+				playerScore++;
+				playerScoreBoard.textContent = playerScore;
+			}
+		}
+		else if(player == 'paper'){
+			if(computer == 'scissors'){
+				result.textContent = 'Computer Won!';
+				computerScore++;
+				computerScoreBoard.textContent = computerScore;
+			}else{
+				result.textContent = 'You Won!';
+				playerScore++;
+				playerScoreBoard.textContent = playerScore;
+			}
+		}
+	}
+
+	const gameOver = (playerOptions,movesLeft) => {
+
+		const chooseMove = document.querySelector('.move');
+		const result = document.querySelector('.result');
+		const reloadBtn = document.querySelector('.reload');
+
+		playerOptions.forEach(option => {
+			option.style.display = 'none';
+		})
+
+	
+		chooseMove.innerText = 'Game Over!!'
+		movesLeft.style.display = 'none';
+
+		if(playerScore > computerScore){
+			result.style.fontSize = '2rem';
+			result.innerText = 'YOU WON THE GAME!'
+			result.style.color = '#308D46';
+		}
+		else if(playerScore < computerScore){
+			result.style.fontSize = '2rem';
+			result.innerText = 'YOU LOST THE GAME!';
+			result.style.color = 'red';
+		}
+		else{
+			result.style.fontSize = '2rem';
+			result.innerText = 'Draw!';
+			result.style.color = 'grey'
+		}
+		reloadBtn.innerText = 'Restart';
+		reloadBtn.style.display = 'flex'
+		reloadBtn.addEventListener('click',() => {
+			window.location.reload();
+		})
+	}
+
+
+	playGame();
+	
+}
+
+game();
